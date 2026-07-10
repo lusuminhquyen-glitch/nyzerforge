@@ -1,0 +1,165 @@
+# NyzerForge Configuration
+
+settings:
+  plugin-name: "&6&lNyzerForge"
+
+stat-identifiers:
+  - "⚔"
+  - "❤"
+  - "🛡"
+  - "✦"
+  - "⬡"
+  - "☠"
+
+stat-display:
+  DAMAGE: "&cSát thương"
+  HEALTH: "&4Máu"
+  ARMOR: "&9Giáp"
+  PIERCE: "&dXuyên giáp"
+  LIFESTEAL: "&cHút máu"
+  SPEED: "&bTốc độ"
+
+stat-formats:
+  DAMAGE: "&7✦ +{value} &cSát thương"
+  HEALTH: "&7❤ +{value} &4Máu"
+  ARMOR: "&7🛡 +{value} &9Giáp"
+  PIERCE: "&7⬡ +{value} &dXuyên giáp"
+  LIFESTEAL: "&7☠ +{value}% &cHút máu"
+  SPEED: "&7⚡ +{value}% &bTốc độ"
+
+materials:
+  common:
+    diamond:
+      item: "DIAMOND"
+      name: "&b&l💎 Ngọc Kim Cương"
+      lore:
+        - "&7Nguyên liệu rèn cấp &aCơ bản"
+        - "&7Tỉ lệ thành công: &a100%"
+      forge-chance: 100
+      min-value: 1.0
+      max-value: 3.0
+      stat-type: "DAMAGE"
+    
+    emerald:
+      item: "EMERALD"
+      name: "&a&l💚 Ngọc Lục Bảo"
+      lore:
+        - "&7Nguyên liệu rèn cấp &aCơ bản"
+        - "&7Tỉ lệ thành công: &a100%"
+      forge-chance: 100
+      min-value: 1.0
+      max-value: 3.0
+      stat-type: "HEALTH"
+    
+    iron_ingot:
+      item: "IRON_INGOT"
+      name: "&7&l⚙ Sắt Rèn"
+      lore:
+        - "&7Nguyên liệu rèn cấp &aCơ bản"
+        - "&7Tỉ lệ thành công: &a100%"
+      forge-chance: 100
+      min-value: 1.0
+      max-value: 2.0
+      stat-type: "ARMOR"
+  
+  rare:
+    netherite_ingot:
+      item: "NETHERITE_INGOT"
+      name: "&c&l🔥 Ngọc Netherite"
+      lore:
+        - "&7Nguyên liệu rèn cấp &dHiếm"
+        - "&7Tỉ lệ thành công: &a80%"
+      forge-chance: 80
+      min-value: 3.0
+      max-value: 6.0
+      stat-type: "DAMAGE"
+    
+    golden_apple:
+      item: "GOLDEN_APPLE"
+      name: "&6&l🍎 Táo Vàng"
+      lore:
+        - "&7Nguyên liệu rèn cấp &dHiếm"
+        - "&7Tỉ lệ thành công: &a75%"
+      forge-chance: 75
+      min-value: 4.0
+      max-value: 8.0
+      stat-type: "HEALTH"
+    
+    diamond_block:
+      item: "DIAMOND_BLOCK"
+      name: "&b&l💎 Khối Kim Cương"
+      lore:
+        - "&7Nguyên liệu rèn cấp &dHiếm"
+        - "&7Tỉ lệ thành công: &a85%"
+      forge-chance: 85
+      min-value: 3.0
+      max-value: 5.0
+      stat-type: "ARMOR"
+  
+  epic:
+    nether_star:
+      item: "NETHER_STAR"
+      name: "&d&l⭐ Sao Nether"
+      lore:
+        - "&7Nguyên liệu rèn cấp &5Huyền thoại"
+        - "&7Tỉ lệ thành công: &a60%"
+      forge-chance: 60
+      min-value: 5.0
+      max-value: 10.0
+      stat-type: "DAMAGE"
+    
+    dragon_head:
+      item: "DRAGON_HEAD"
+      name: "&5&l🐉 Đầu Rồng"
+      lore:
+        - "&7Nguyên liệu rèn cấp &5Huyền thoại"
+        - "&7Tỉ lệ thành công: &a50%"
+      forge-chance: 50
+      min-value: 8.0
+      max-value: 15.0
+      stat-type: "LIFESTEAL"
+    
+    beacon:
+      item: "BEACON"
+      name: "&e&l✨ Đèn Hiệu"
+      lore:
+        - "&7Nguyên liệu rèn cấp &5Huyền thoại"
+        - "&7Tỉ lệ thành công: &a55%"
+      forge-chance: 55
+      min-value: 5.0
+      max-value: 12.0
+      stat-type: "PIERCE"
+
+  legendary:
+    ender_dragon_egg:
+      item: "DRAGON_EGG"
+      name: "&6&l🥚 Trứng Rồng"
+      lore:
+        - "&7Nguyên liệu rèn cấp &6Truyền thuyết"
+        - "&7Tỉ lệ thành công: &a35%"
+      forge-chance: 35
+      min-value: 10.0
+      max-value: 20.0
+      stat-type: "DAMAGE"
+    
+    enchanted_golden_apple:
+      item: "ENCHANTED_GOLDEN_APPLE"
+      name: "&6&l🍎 Táo Vàng Thần Thánh"
+      lore:
+        - "&7Nguyên liệu rèn cấp &6Truyền thuyết"
+        - "&7Tỉ lệ thành công: &a40%"
+      forge-chance: 40
+      min-value: 10.0
+      max-value: 18.0
+      stat-type: "HEALTH"
+    
+    netherite_block:
+      item: "NETHERITE_BLOCK"
+      name: "&c&l🔥 Khối Netherite"
+      lore:
+        - "&7Nguyên liệu rèn cấp &6Truyền thuyết"
+        - "&7Tỉ lệ thành công: &a45%"
+      forge-chance: 45
+      min-value: 8.0
+      max-value: 16.0
+      stat-type: "ARMOR"
