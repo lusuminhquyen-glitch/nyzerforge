@@ -1,0 +1,38 @@
+name: NyzerForge
+version: 1.0.0
+main: com.nyzerforge.NyzerForgePlugin
+api-version: 1.21
+author: NyzerDev
+description: Hệ thống rèn vũ khí cao cấp với GUI đẹp mắt
+
+commands:
+  forge:
+    description: Mở menu rèn NyzerForge
+    usage: /forge
+    permission: nyzerforge.use
+    aliases: [f]
+  
+  forgeremove:
+    description: Gỡ dòng rèn cuối cùng trên vật phẩm
+    usage: /forgeremove
+    permission: nyzerforge.remove
+    aliases: [fr, remover]
+  
+  forgereload:
+    description: Reload lại config NyzerForge
+    usage: /forgereload
+    permission: nyzerforge.reload
+    aliases: [frel]
+
+permissions:
+  nyzerforge.use:
+    description: Cho phép sử dụng lệnh /forge
+    default: true
+  
+  nyzerforge.remove:
+    description: Cho phép sử dụng lệnh /forgeremoadd
+    default: true
+  
+  nyzerforge.reload:
+    description: Cho phép sử dụng lệnh /forgereload
+    default: op
