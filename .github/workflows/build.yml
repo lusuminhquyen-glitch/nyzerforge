@@ -1,0 +1,59 @@
+name: Build NyzerForge Plugin
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Cho phép chạy thủ công
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Bước 1: Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    # Bước 2: Setup Java 21
+    - name: Setup Java JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: 'maven'
+    
+    # Bước 3: Build với Maven
+    - name: Build with Maven
+      run: mvn clean package
+    
+    # Bước 4: Upload artifact (file .jar)
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: NyzerForge
+        path: target/NyzerForge-*.jar
+        retention-days: 30
+    
+    # Bước 5: Lấy version từ pom.xml
+    - name: Get version
+      id: get_version
+      run: |
+        VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "Found version: $VERSION"
+    
+    # Bước 6: Tạo release (chỉ khi push lên main)
+    - name: Create Release
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      uses: softprops/action-gh-release@v1
+      with:
+        name: NyzerForge v${{ steps.get_version.outputs.VERSION }}
+        tag_name: v${{ steps.get_version.outputs.VERSION }}
+        files: target/NyzerForge-*.jar
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
