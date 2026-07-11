@@ -1,4 +1,3 @@
-// ForgeManager.java
 package com.nyzerforge;
 
 import net.md_5.bungee.api.ChatColor;
@@ -37,8 +36,12 @@ public class ForgeManager {
                 ConfigurationSection matSection = section.getConfigurationSection(matKey);
                 if (matSection == null) continue;
 
-                Material material = Material.getMaterial(matSection.getString("item", "DIAMOND"));
-                if (material == null) continue;
+                String materialName = matSection.getString("item", "DIAMOND");
+                Material material = Material.getMaterial(materialName);
+                if (material == null) {
+                    plugin.getLogger().warning("Material not found: " + materialName);
+                    continue;
+                }
 
                 String displayName = matSection.getString("name", "&f" + matKey);
                 List<String> lore = matSection.getStringList("lore");
@@ -51,6 +54,8 @@ public class ForgeManager {
             }
             forgeMaterials.put(key, list);
         }
+        
+        plugin.getLogger().info("Loaded " + forgeMaterials.size() + " material categories");
     }
 
     public String colorize(String message) {
@@ -136,8 +141,9 @@ public class ForgeManager {
 
     private int getForgeLines(List<String> lore) {
         int count = 0;
+        List<String> identifiers = plugin.getConfig().getStringList("stat-identifiers");
         for (String line : lore) {
-            for (String stat : plugin.getConfig().getStringList("stat-identifiers")) {
+            for (String stat : identifiers) {
                 if (line.contains(stat)) {
                     count++;
                     break;
@@ -171,19 +177,18 @@ public class ForgeManager {
             return;
         }
 
-        List<String> forgeLines = new ArrayList<>();
         List<Integer> forgeIndices = new ArrayList<>();
+        List<String> identifiers = plugin.getConfig().getStringList("stat-identifiers");
         for (int i = 0; i < lore.size(); i++) {
-            for (String stat : plugin.getConfig().getStringList("stat-identifiers")) {
+            for (String stat : identifiers) {
                 if (lore.get(i).contains(stat)) {
-                    forgeLines.add(lore.get(i));
                     forgeIndices.add(i);
                     break;
                 }
             }
         }
 
-        if (forgeLines.isEmpty()) {
+        if (forgeIndices.isEmpty()) {
             player.sendMessage(colorize("&c❌ Vật phẩm không có dòng rèn nào!"));
             return;
         }

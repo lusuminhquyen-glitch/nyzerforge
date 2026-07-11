@@ -1,4 +1,3 @@
-// ForgeReloadCommand.java
 package com.nyzerforge;
 
 import org.bukkit.command.Command;
@@ -16,6 +15,7 @@ public class ForgeReloadCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         plugin.reloadConfig();
         plugin.getForgeManager().loadMaterials();
+        plugin.getConfigManager().reloadConfig();
         sender.sendMessage(plugin.getForgeManager().colorize("&a✅ Đã reload config thành công!"));
         return true;
     }
