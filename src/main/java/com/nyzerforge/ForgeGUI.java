@@ -1,4 +1,3 @@
-// ForgeGUI.java
 package com.nyzerforge;
 
 import org.bukkit.Bukkit;
@@ -8,16 +7,21 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class ForgeGUI implements Listener {
     private final NyzerForgePlugin plugin;
     private final Player player;
     private Inventory inventory;
+    private static final Map<UUID, ForgeGUI> activeGUIs = new HashMap<>();
 
     public ForgeGUI(NyzerForgePlugin plugin, Player player) {
         this.plugin = plugin;
@@ -45,8 +49,8 @@ public class ForgeGUI implements Listener {
         ItemMeta toolMeta = toolSlot.getItemMeta();
         toolMeta.setDisplayName(plugin.getForgeManager().colorize("&e⚔ &fVật phẩm cần rèn"));
         toolMeta.setLore(Arrays.asList(
-            plugin.getForgeManager().colorize("&7Đặt vật phẩm vào đây"),
-            plugin.getForgeManager().colorize("&7để bắt đầu rèn!")
+            plugin.getForgeManager().colorize("&7Click chuột trái để đặt vật phẩm"),
+            plugin.getForgeManager().colorize("&7Click chuột phải để lấy ra")
         ));
         toolSlot.setItemMeta(toolMeta);
         inventory.setItem(11, toolSlot);
@@ -56,8 +60,8 @@ public class ForgeGUI implements Listener {
         ItemMeta materialMeta = materialSlot.getItemMeta();
         materialMeta.setDisplayName(plugin.getForgeManager().colorize("&a📦 Nguyên liệu rèn"));
         materialMeta.setLore(Arrays.asList(
-            plugin.getForgeManager().colorize("&7Đặt nguyên liệu vào đây"),
-            plugin.getForgeManager().colorize("&7để rèn vật phẩm!")
+            plugin.getForgeManager().colorize("&7Click chuột trái để đặt nguyên liệu"),
+            plugin.getForgeManager().colorize("&7Click chuột phải để lấy ra")
         ));
         materialSlot.setItemMeta(materialMeta);
         inventory.setItem(15, materialSlot);
@@ -76,6 +80,8 @@ public class ForgeGUI implements Listener {
         // Decorative borders
         decorateInventory();
 
+        // Lưu GUI vào map để theo dõi
+        activeGUIs.put(player.getUniqueId(), this);
         player.openInventory(inventory);
     }
 
@@ -98,18 +104,52 @@ public class ForgeGUI implements Listener {
         if (!event.getInventory().equals(inventory)) return;
 
         Player p = (Player) event.getWhoClicked();
-        event.setCancelled(true);
-
         int slot = event.getRawSlot();
+
+        // Cho phép click vào các slot đặc biệt
+        if (slot == 11 || slot == 15) {
+            // Cho phép tương tác với slot vật phẩm và nguyên liệu
+            event.setCancelled(false);
+            return;
+        }
+
         if (slot == 22) {
-            // Forge
+            // Nút rèn
+            event.setCancelled(true);
             ItemStack tool = inventory.getItem(11);
             ItemStack material = inventory.getItem(15);
+            
+            if (tool == null || tool.getType() == Material.AIR) {
+                p.sendMessage(plugin.getForgeManager().colorize("&c❌ Vui lòng đặt vật phẩm cần rèn!"));
+                return;
+            }
+            
+            if (material == null || material.getType() == Material.AIR) {
+                p.sendMessage(plugin.getForgeManager().colorize("&c❌ Vui lòng đặt nguyên liệu!"));
+                return;
+            }
+            
             plugin.getForgeManager().forgeItem(p, tool, material);
             updateInventory();
-        } else if (slot == 11 || slot == 15) {
-            // Allow placing items
-            event.setCancelled(false);
+            return;
+        }
+
+        // Chặn tương tác với các slot khác
+        if (slot < inventory.getSize()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onInventoryDrag(InventoryDragEvent event) {
+        if (!event.getInventory().equals(inventory)) return;
+        
+        // Cho phép kéo thả vào slot 11 và 15
+        for (int slot : event.getRawSlots()) {
+            if (slot != 11 && slot != 15) {
+                event.setCancelled(true);
+                return;
+            }
         }
     }
 
@@ -117,7 +157,10 @@ public class ForgeGUI implements Listener {
     public void onInventoryClose(InventoryCloseEvent event) {
         if (!event.getInventory().equals(inventory)) return;
         
-        // Return items to player
+        // Xóa GUI khỏi map
+        activeGUIs.remove(event.getPlayer().getUniqueId());
+        
+        // Trả lại vật phẩm cho người chơi nếu có
         Player p = (Player) event.getPlayer();
         ItemStack tool = inventory.getItem(11);
         ItemStack material = inventory.getItem(15);
@@ -129,8 +172,10 @@ public class ForgeGUI implements Listener {
             p.getInventory().addItem(material);
         }
         
+        // Hủy đăng ký listener
         InventoryClickEvent.getHandlerList().unregister(this);
         InventoryCloseEvent.getHandlerList().unregister(this);
+        InventoryDragEvent.getHandlerList().unregister(this);
     }
 
     private void updateInventory() {
